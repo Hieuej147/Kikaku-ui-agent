@@ -1,0 +1,17 @@
+# This is a config for E2B sandbox template.
+# You can use template ID (h0z2880sgqx5tnltq0ii) or template name (kikaku-nextjs-hieu-bc-v2) to create a sandbox:
+
+# Python SDK
+# from e2b import Sandbox, AsyncSandbox
+# sandbox = Sandbox.create("kikaku-nextjs-hieu-bc-v2") # Sync sandbox
+# sandbox = await AsyncSandbox.create("kikaku-nextjs-hieu-bc-v2") # Async sandbox
+
+# JS SDK
+# import { Sandbox } from 'e2b'
+# const sandbox = await Sandbox.create('kikaku-nextjs-hieu-bc-v2')
+
+team_id = "64511e66-ef17-4d90-a242-ff0ffc97cef0"
+start_cmd = "/compile_page.sh"
+dockerfile = "e2b.Dockerfile"
+template_name = "kikaku-nextjs-hieu-bc-v2"
+template_id = "h0z2880sgqx5tnltq0ii"
