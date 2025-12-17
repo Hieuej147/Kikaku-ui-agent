@@ -77,7 +77,10 @@ export const CodeAgentFunction = inngest.createFunction(
               })
             ),
           }),
-          handler: async ({ files }, { step, network }: Tool.Options<AgentState>) => {
+          handler: async (
+            { files },
+            { step, network }: Tool.Options<AgentState>
+          ) => {
             const newFiles = await step?.run("createOrUpdateFile", async () => {
               try {
                 const updatedFiles = network.state.data.files || {};
@@ -162,6 +165,7 @@ export const CodeAgentFunction = inngest.createFunction(
       if (isError) {
         return await prisma.message.create({
           data: {
+            ProjectId: event.data.projectId,
             content: "Something went wrong. Please try again.",
             role: "ASSISTANT",
             type: "ERROR",
@@ -170,6 +174,7 @@ export const CodeAgentFunction = inngest.createFunction(
       }
       return await prisma.message.create({
         data: {
+          ProjectId: event.data.projectId,
           content: result.state.data.summary,
           role: "ASSISTANT",
           type: "RESULT",
