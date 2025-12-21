@@ -1,7 +1,7 @@
 "use client";
 
 import { useTRPC } from "@/trpc/client";
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -12,6 +12,10 @@ import { Suspense, useState } from "react";
 import { Fragment } from "@/generated/prisma/client";
 import { ProjectHeader } from "../components/project-header";
 import { FragmentWeb } from "../components/fragment-web";
+import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { FileExplorer } from "@/components/file-explorer";
 
 interface Props {
   projectId: string;
@@ -19,12 +23,8 @@ interface Props {
 
 export const Projectview = ({ projectId }: Props) => {
   const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
+  const [tabState, settabState] = useState<"preview" | "code">("preview");
   const trpc = useTRPC();
-  // const { data: project } = useSuspenseQuery(
-  //   trpc.projects.getOne.queryOptions({
-  //     id: projectId,
-  //   })
-  // );
 
   return (
     <>
@@ -54,7 +54,44 @@ export const Projectview = ({ projectId }: Props) => {
             maxSize={80}
             className="min-h-0"
           >
-            {!!activeFragment && <FragmentWeb data={activeFragment} />}
+            <Tabs
+              className="h-full gap-y-0"
+              defaultValue="preview"
+              value={tabState}
+              onValueChange={(value) =>
+                settabState(value as "preview" | "code")
+              }
+            >
+              <div className="w-full flex items-center p-2 border-b gap-x-2">
+                <TabsList className="h-8 p-0 border rounded-md">
+                  <TabsTrigger value="preview" className="rounded-md">
+                    <EyeIcon />
+                    <span>Demon</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="code" className="rounded-md">
+                    <CodeIcon />
+                    <span>Code</span>
+                  </TabsTrigger>
+                </TabsList>
+                <div className="ml-auto flex items-center gap-x-2">
+                  <Button asChild size={"sm"} variant={"default"}>
+                    <Link href={"/pricing"}>
+                      <CrownIcon /> Upgrade
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+              <TabsContent value="preview">
+                {!!activeFragment && <FragmentWeb data={activeFragment} />}
+              </TabsContent>
+              <TabsContent value="code" className="min-h-0">
+                {!!activeFragment?.files && (
+                  <FileExplorer
+                    files={activeFragment.files as { [path: string]: string }}
+                  />
+                )}
+              </TabsContent>
+            </Tabs>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
