@@ -2,6 +2,7 @@ import { Sandbox } from "@e2b/code-interpreter";
 import { inngest } from "./client";
 import {
   openai,
+  gemini,
   createAgent,
   createTool,
   createNetwork,
@@ -35,6 +36,9 @@ export const CodeAgentFunction = inngest.createFunction(
           temperature: 0.1,
         },
       }),
+      // model: gemini({
+      //   model: "gemini-2.5-flash",
+      // }),
 
       tools: [
         createTool({
