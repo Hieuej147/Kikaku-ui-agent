@@ -104,7 +104,7 @@ export const CodeAgentFunction = inngest.createFunction(
           },
         }),
         createTool({
-          name: "readFile",
+          name: "readFiles",
           description: "Read files from the sandbox",
           parameters: z.object({
             files: z.array(z.string()),
