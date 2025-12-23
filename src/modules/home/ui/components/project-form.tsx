@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import { PROJECT_TEMPLATES } from "../../constants";
+import { useClerk } from "@clerk/nextjs";
 
 const formSchema = z.object({
   value: z
@@ -25,6 +26,7 @@ const formSchema = z.object({
     .max(10000, { message: "Value is too long" }),
 });
 export const ProjectForm = () => {
+  const clerk = useClerk();
   const router = useRouter();
   const [isFocused, setIsFocused] = useState(false);
   const trpc = useTRPC();
@@ -45,8 +47,10 @@ export const ProjectForm = () => {
         router.push(`/projects/${data.id}`);
       },
       onError: (err) => {
-        // Redirect to pricing if specific
         toast.error(err.message);
+        if (err.data?.code === "UNAUTHORIZED") {
+          router.push("/sign-in");
+        }
       },
     })
   );
@@ -58,13 +62,13 @@ export const ProjectForm = () => {
   const isPending = createProject.isPending;
   const isButtonDisabled = isPending || !form.formState.isValid;
 
-  const onSelect = (value: string)=>{
-    form.setValue("value", value,{
-        shouldDirty: true,
-        shouldValidate: true,
-        shouldTouch: true
-    })
-  }
+  const onSelect = (value: string) => {
+    form.setValue("value", value, {
+      shouldDirty: true,
+      shouldValidate: true,
+      shouldTouch: true,
+    });
+  };
   return (
     <Form {...form}>
       <section className="space-y-6">
@@ -89,7 +93,7 @@ export const ProjectForm = () => {
                 className="pt-4 resize-none border-none w-full outline-none bg-transparent"
                 placeholder="What would you like to build?"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && (!e.ctrlKey || e.metaKey)) {
+                  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                     e.preventDefault();
                     form.handleSubmit(onSubmit)();
                   }
@@ -126,7 +130,7 @@ export const ProjectForm = () => {
               variant={"outline"}
               size={"sm"}
               className="bg-white dark:bg-sidebar mt-4"
-              onClick={()=>onSelect(template.prompt)}
+              onClick={() => onSelect(template.prompt)}
             >
               {template.emoji} {template.title}
             </Button>
