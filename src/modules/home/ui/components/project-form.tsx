@@ -44,12 +44,16 @@ export const ProjectForm = () => {
       onSuccess: (data) => {
         // form.reset();
         queryClient.invalidateQueries(trpc.projects.getMany.queryOptions());
+        queryClient.invalidateQueries(trpc.usage.status.queryOptions());
         router.push(`/projects/${data.id}`);
       },
       onError: (err) => {
         toast.error(err.message);
         if (err.data?.code === "UNAUTHORIZED") {
           router.push("/sign-in");
+        }
+        if (err.data?.code === "TOO_MANY_REQUESTS") {
+          router.push("/pricing");
         }
       },
     })
