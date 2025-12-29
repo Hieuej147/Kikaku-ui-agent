@@ -10,10 +10,15 @@ import {
   type Message,
   createState,
 } from "@inngest/agent-kit";
-import { getSandbox, lastAssistantTextMessageContent } from "./utils";
+import {
+  getSandbox,
+  lastAssistantTextMessageContent,
+  parseContent,
+} from "./utils";
 import { file, z } from "zod";
 import { FRAGMENT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/lib/prompt";
 import { prisma } from "@/lib/prisma";
+import { SANDBOX_TIMEOUT } from "./types";
 
 interface AgentState {
   summary: string;
@@ -26,6 +31,7 @@ export const CodeAgentFunction = inngest.createFunction(
   async ({ event, step }) => {
     const sandboxId = await step.run("get-sandbox-id", async () => {
       const sandbox = await Sandbox.create("kikaku-nextjs-hieu-bc-v2");
+      await sandbox.setTimeout(SANDBOX_TIMEOUT);
       return sandbox.sandboxId;
     });
 
@@ -38,8 +44,9 @@ export const CodeAgentFunction = inngest.createFunction(
             ProjectId: event.data.projectId,
           },
           orderBy: {
-            createdAt: "asc", // should update asc if assistant don't understand
+            createdAt: "desc", // should update asc if assistant don't understand
           },
+          take: 5,
         });
         for (const message of messages) {
           formatedMessages.push({
@@ -48,7 +55,7 @@ export const CodeAgentFunction = inngest.createFunction(
             content: `1 message: ${message.content}`,
           });
         }
-        return formatedMessages;
+        return formatedMessages.reverse();
       }
     );
 
@@ -224,28 +231,6 @@ export const CodeAgentFunction = inngest.createFunction(
     const { output: response } = await responseGenerator.run(
       result.state.data.summary
     );
-
-    const generateResponse = () => {
-      if (response[0].type !== "text") {
-        return "Here you go";
-      }
-      if (Array.isArray(response[0].content)) {
-        return response[0].content.map((c) => c.text).join("");
-      } else {
-        return response[0].content;
-      }
-    };
-
-    const generateFragmentTitle = () => {
-      if (fragmentTitle[0].type !== "text") {
-        return "Fragment";
-      }
-      if (Array.isArray(fragmentTitle[0].content)) {
-        return fragmentTitle[0].content.map((txt) => txt.text).join("");
-      } else {
-        return fragmentTitle[0].content;
-      }
-    };
     const isError =
       !result.state.data.summary ||
       Object.keys(result.state.data.files || {}).length === 0;
@@ -268,13 +253,13 @@ export const CodeAgentFunction = inngest.createFunction(
       return await prisma.message.create({
         data: {
           ProjectId: event.data.projectId,
-          content: generateResponse(),
+          content: parseContent(response),
           role: "ASSISTANT",
           type: "RESULT",
           fragment: {
             create: {
               sandboxUrl: sandboxUrl,
-              title: generateFragmentTitle(),
+              title: parseContent(fragmentTitle),
               files: result.state.data.files,
             },
           },

@@ -55,7 +55,7 @@ export const projectRouter = createTRPCRouter({
         if (error instanceof Error) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: `Something went wrong ${error.message}`,
+            message: "Something went wrong",
           });
         } else {
           throw new TRPCError({
