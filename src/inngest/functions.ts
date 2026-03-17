@@ -207,7 +207,7 @@ export const CodeAgentFunction = inngest.createFunction(
       description: "A fragment title generator",
       system: FRAGMENT_TITLE_PROMPT,
       model: openai({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         defaultParameters: {
           temperature: 0.1,
         },
