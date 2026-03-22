@@ -120,7 +120,7 @@ Usage  (rate limiting, keyed by userId)
 **1. Clone repository**
 
 ```bash
-git clone https://github.com/your-username/kikaku.git
+git clone https://github.com/Hieuej147/Kikaku-ui-agent.git
 cd kikaku
 ```
 
@@ -136,7 +136,7 @@ Create `.env.local` in the root:
 
 ```env
 # Database
-DATABASE_URL=postgresql://user:password@host:5432/kikaku
+DATABASE_URL=url-your-database
 
 # App URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -144,6 +144,10 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 # Clerk Auth
 CLERK_SECRET_KEY=sk_...
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/
 
 # OpenAI
 OPENAI_API_KEY=sk-...
@@ -299,19 +303,6 @@ When credits are exhausted, users are redirected to `/pricing`.
 
 ---
 
-## 🌐 Deployment
-
-### Vercel (Next.js)
-
-```
-1. Push to GitHub
-2. Import repo on vercel.com → auto-detects Next.js
-3. Set environment variables (see .env.local above)
-4. Deploy → auto-redeploys on every git push ✅
-```
-
----
-
 ## 🔄 What I Learned
 
 - **Inngest Agent Kit**: Building multi-tool agent networks with persistent state, lifecycle hooks, and router-controlled iteration loops.
@@ -324,7 +315,7 @@ When credits are exhausted, users are redirected to `/pricing`.
 
 ## 📝 License
 
-Private project — All rights reserved.
+This project is **UNLICENSED** — for educational and portfolio purposes.
 
 ---
 
@@ -332,7 +323,7 @@ Private project — All rights reserved.
 
 **Hieu Dev**
 
-- GitHub: [@your-username](https://github.com/your-username)
+- GitHub: [@Hieuej147]( GitHub: [@Hieuej147](https://github.com/Hieuej147))
 
 ---
 
