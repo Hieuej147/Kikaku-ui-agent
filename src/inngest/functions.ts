@@ -218,7 +218,7 @@ export const CodeAgentFunction = inngest.createFunction(
       description: "A response generator",
       system: RESPONSE_PROMPT,
       model: openai({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         defaultParameters: {
           temperature: 0.1,
         },
