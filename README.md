@@ -194,92 +194,6 @@ npm run lint       # Run ESLint
 
 ---
 
-## 📁 Project Structure
-
-```
-src/
-├── app/
-│   ├── (auth)/
-│   │   ├── sign-in/           # Sign in page (Clerk)
-│   │   ├── sign-up/           # Sign up page (Clerk)
-│   │   └── pricing/           # Pricing page (Clerk PricingTable)
-│   ├── (home)/
-│   │   └── page.tsx           # Home: project form + project list
-│   ├── projects/[projectId]/  # Project detail page
-│   ├── api/
-│   │   ├── inngest/           # Inngest webhook handler
-│   │   └── trpc/              # tRPC API handler
-│   ├── layout.tsx             # Root layout: Clerk, tRPC, ThemeProvider
-│   └── globals.css
-│
-├── components/
-│   ├── code-view.tsx          # Syntax highlighting (Prism.js)
-│   ├── file-explorer.tsx      # File explorer with tree view + copy
-│   ├── hint.tsx               # Tooltip wrapper
-│   ├── tree-view.tsx          # Sidebar tree navigation
-│   ├── user-control.tsx       # Clerk UserButton
-│   └── ui/                    # Shadcn UI components
-│
-├── modules/
-│   ├── home/ui/
-│   │   └── components/
-│   │       ├── navbar.tsx         # Fixed navbar with auth state
-│   │       ├── project-form.tsx   # New project form + templates
-│   │       └── project-list.tsx   # User project list
-│   └── projects/ui/
-│       ├── views/
-│       │   └── project-view.tsx   # Main view: chat + preview panels
-│       └── components/
-│           ├── project-header.tsx     # Header with dropdown menu
-│           ├── message-container.tsx  # Message list with polling
-│           ├── message-card.tsx       # Individual message display
-│           ├── message-form.tsx       # Prompt input form
-│           ├── message-loading.tsx    # Animated loading indicator
-│           ├── fragment-web.tsx       # Sandbox iframe preview
-│           └── usage.tsx              # Credit counter display
-│
-├── inngest/
-│   ├── client.ts              # Inngest client
-│   ├── functions.ts           # CodeAgentFunction (main AI agent)
-│   ├── utils.ts               # Helpers: getSandbox, parseContent...
-│   └── types.ts               # SANDBOX_TIMEOUT constant
-│
-├── trpc/
-│   ├── client.tsx             # TRPCReactProvider + useTRPC
-│   ├── init.ts                # tRPC init, context, auth middleware
-│   ├── query-client.ts        # TanStack Query client config
-│   └── routers/
-│       ├── _app.ts            # App router (merged)
-│       ├── projects.ts        # Project CRUD
-│       ├── messages.ts        # Message CRUD
-│       └── usage.ts           # Credit status
-│
-├── lib/
-│   ├── prisma.ts              # Prisma client singleton
-│   ├── usage.ts               # Rate limiting logic
-│   ├── prompt.ts              # AI system prompts (PROMPT, RESPONSE_PROMPT, FRAGMENT_TITLE_PROMPT)
-│   └── utils.ts               # cn(), convertFilesToTreeItems()
-│
-├── hooks/
-│   ├── use-current-theme.ts   # Get resolved theme (dark/light)
-│   ├── use-is-mobile.ts       # Mobile breakpoint detection
-│   └── use-scroll.ts          # Scroll position detection
-│
-├── generated/
-│   └── prisma/                # Prisma generated client
-│
-└── types/                     # Shared TypeScript types (TreeItem...)
-
-prisma/
-├── schema.prisma              # DB schema: Project, Message, Fragment, Usage
-└── prisma.config.ts           # Prisma config
-
-Dockerfile                     # E2B sandbox image (Node 24 + Next.js)
-compile_page.sh                # Sandbox startup script
-```
-
----
-
 ## 🐳 E2B Sandbox
 
 The sandbox is a pre-built Next.js 16 environment running inside Docker on E2B infrastructure:
@@ -310,6 +224,12 @@ When credits are exhausted, users are redirected to `/pricing`.
 - **tRPC v11 + TanStack Query**: Server-side prefetching with `HydrationBoundary`, type-safe mutations with cache invalidation.
 - **Clerk plan-based access**: Using `has({ plan: "pro" })` server-side for rate limiting and client-side for UI gating.
 - **Background job patterns**: Decoupling long-running AI tasks from the HTTP request lifecycle using event-driven Inngest functions.
+
+---
+
+## 🎬 Demo
+
+![Preview](./assets/output-full.gif)
 
 ---
 
